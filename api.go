@@ -7,14 +7,6 @@ import (
 	"github.com/jochasinga/requests"
 )
 
-/*
-var endpoints = {
-  ticker: new UrlPattern('/ticker(?api_code=:apiCode)'),
-  frombtc: new UrlPattern('/frombtc?value=:value&time=:time&currency=:currency(&api_code=:apiCode)'),
-  tobtc: new UrlPattern('/tobtc?value=:value&currency=:currency(&api_code=:apiCode)')
-}
-*/
-
 type API struct {
 	BaseUrl   string
 	Endpoints map[string]string
@@ -25,13 +17,13 @@ func (api API) Get() string {
 }
 
 func main() {
-	api := API{"https://blockchain.info", exchange.ExchangeEndpoints}
+	api := API{"https://blockchain.info", exchange.Endpoints}
 
 	jsonType := func(r *requests.Request) {
 		r.Header.Add("content-type", "application/json")
 	}
 
-	opts := exchange.Options{"USD", 500}
+	opts := exchange.Options{Currency: "USD", Value: 500}
 	v, _ := query.Values(opts)
 	url := api.BaseUrl + api.Endpoints["tobtc"] + v.Encode()
 
