@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/bkrem/blockchain.info-api-v1-client-go/exchange"
 	"github.com/google/go-querystring/query"
 	"github.com/jochasinga/requests"
 )
@@ -19,29 +20,18 @@ type API struct {
 	Endpoints map[string]string
 }
 
-type Options struct {
-	Currency string `url:"currency"`
-	Value    int    `url:"value"`
-}
-
-var exchangeEndpoints = map[string]string{
-	"ticker":  "/ticker",
-	"frombtc": "/frombtc?",
-	"tobtc":   "/tobtc?",
-}
-
 func (api API) Get() string {
 	return api.BaseUrl
 }
 
 func main() {
-	api := API{"https://blockchain.info", exchangeEndpoints}
+	api := API{"https://blockchain.info", exchange.ExchangeEndpoints}
 
 	jsonType := func(r *requests.Request) {
 		r.Header.Add("content-type", "application/json")
 	}
 
-	opts := Options{"USD", 500}
+	opts := exchange.Options{"USD", 500}
 	v, _ := query.Values(opts)
 	url := api.BaseUrl + api.Endpoints["tobtc"] + v.Encode()
 
