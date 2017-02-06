@@ -1,11 +1,46 @@
 package main
 
 import (
-	"gopkg.in/gin-gonic/gin.v1"
+	"fmt"
+	"github.com/jochasinga/requests"
 )
 
-func main() {
-	router := gin.Default()
+/*
+var endpoints = {
+  ticker: new UrlPattern('/ticker(?api_code=:apiCode)'),
+  frombtc: new UrlPattern('/frombtc?value=:value&time=:time&currency=:currency(&api_code=:apiCode)'),
+  tobtc: new UrlPattern('/tobtc?value=:value&currency=:currency(&api_code=:apiCode)')
+}
+*/
 
-	router.Run(":3000")
+type API struct {
+	baseUrl   string
+	endpoints map[string]string
+}
+
+var exchangeEndpoints = map[string]string{
+	"ticker":  "/ticker",
+	"frombtc": "/frombtc",
+	"tobtc":   "/tobtc",
+}
+
+func (api API) Get() string {
+	return api.baseUrl
+}
+
+func main() {
+	api := API{
+		baseUrl:   "https://blockchain.info",
+		endpoints: exchangeEndpoints,
+	}
+
+	jsonType := func(r *requests.Request) {
+		r.Header.Add("content-type", "application/json")
+	}
+
+	res, err := requests.Get(api.baseUrl+api.endpoints["ticker"], jsonType)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s", res.String())
 }
