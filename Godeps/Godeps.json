@@ -4,6 +4,10 @@
 	"GodepVersion": "v79",
 	"Deps": [
 		{
+			"ImportPath": "github.com/google/go-querystring/query",
+			"Rev": "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
+		},
+		{
 			"ImportPath": "github.com/jochasinga/requests",
 			"Comment": "memory-lane-35-gaf9bbdb",
 			"Rev": "af9bbdb4ab2c7832f8972388537b9ce1b942614c"

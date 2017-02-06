@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/google/go-querystring/query"
 	"github.com/jochasinga/requests"
 )
 
@@ -14,33 +15,41 @@ var endpoints = {
 */
 
 type API struct {
-	baseUrl   string
-	endpoints map[string]string
+	BaseUrl   string
+	Endpoints map[string]string
+}
+
+type Options struct {
+	Currency string `url:"currency"`
+	Value    int    `url:"value"`
 }
 
 var exchangeEndpoints = map[string]string{
 	"ticker":  "/ticker",
-	"frombtc": "/frombtc",
-	"tobtc":   "/tobtc",
+	"frombtc": "/frombtc?",
+	"tobtc":   "/tobtc?",
 }
 
 func (api API) Get() string {
-	return api.baseUrl
+	return api.BaseUrl
 }
 
 func main() {
-	api := API{
-		baseUrl:   "https://blockchain.info",
-		endpoints: exchangeEndpoints,
-	}
+	api := API{"https://blockchain.info", exchangeEndpoints}
 
 	jsonType := func(r *requests.Request) {
 		r.Header.Add("content-type", "application/json")
 	}
 
-	res, err := requests.Get(api.baseUrl+api.endpoints["ticker"], jsonType)
+	opts := Options{"USD", 500}
+	v, _ := query.Values(opts)
+	url := api.BaseUrl + api.Endpoints["tobtc"] + v.Encode()
+
+	res, err := requests.Get(url, jsonType)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%s", res.String())
+	fmt.Printf("Query: %s\n", v.Encode())
+	fmt.Printf("Full URL: %s\n", url)
+	fmt.Print(res.String())
 }
