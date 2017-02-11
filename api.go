@@ -8,12 +8,12 @@ import (
 )
 
 type API struct {
-	BaseUrl   string
+	BaseURL   string
 	Endpoints map[string]string
 }
 
 func (api API) Get() string {
-	return api.BaseUrl
+	return api.BaseURL
 }
 
 func main() {
@@ -25,7 +25,7 @@ func main() {
 
 	opts := exchange.Options{Currency: "USD", Value: 500}
 	v, _ := query.Values(opts)
-	url := api.BaseUrl + api.Endpoints["tobtc"] + v.Encode()
+	url := api.BaseURL + api.Endpoints["tobtc"] + v.Encode()
 
 	res, err := requests.Get(url, jsonType)
 	if err != nil {
