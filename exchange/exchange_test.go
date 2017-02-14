@@ -8,7 +8,8 @@ import (
 const floatType float64 = 0.1
 
 func TestGetTicker(t *testing.T) {
-	ticker := GetTicker()
+	ticker, err := GetTicker()
+	assert.Nil(t, err)
 	assert.NotEmpty(t, ticker)
 }
 

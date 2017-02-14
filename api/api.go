@@ -19,28 +19,28 @@ type API struct {
 	Endpoints map[string]string
 }
 
-func (api API) Get(endpoint string) string {
+func (api API) Get(endpoint string) (string, error) {
 	url := api.BaseURL + api.Endpoints[endpoint]
 	fmt.Printf("Get %s\n", url)
 	res, err := requests.Get(url)
 	if err != nil {
 		panic(err)
 	}
-	return res.String()
+	return res.String(), err
 }
 
-func (api API) GetWithOpts(endpoint string, opts string) string {
-	url := api.BaseURL + api.Endpoints[endpoint] + "?" + opts
+func (api API) GetWithOpts(endpoint string, opts string) (string, error) {
+	url := api.BaseURL + api.Endpoints[endpoint] + opts
 	fmt.Printf("GetWithOpts %s\n", url)
 	res, err := requests.Get(url)
-	if err != nil {
-		panic(err)
-	}
-	return res.String()
+	return res.String(), err
 }
 
 func (API) EncodeOpts(opts interface{}) string {
-	v, _ := query.Values(opts)
+	v, err := query.Values(opts)
+	if err != nil {
+		panic(err)
+	}
 	encodedOpts := v.Encode()
 	return encodedOpts
 }

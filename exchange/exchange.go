@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/bkrem/blockchain.info-api-v1-client-go/api"
 	"github.com/bkrem/blockchain.info-api-v1-client-go/util"
-	"strconv"
 )
 
 type exchangeOpts struct {
@@ -15,15 +14,16 @@ type exchangeOpts struct {
 }
 
 var endpoints = map[string]string{
-	"ticker":  "/ticker",
-	"frombtc": "/frombtc",
-	"tobtc":   "/tobtc",
+	"ticker":  "/ticker?",
+	"frombtc": "/frombtc?",
+	"tobtc":   "/tobtc?",
 }
 
 var client = api.API{BaseURL: "https://blockchain.info", Endpoints: endpoints}
 
-func GetTicker() string {
-	return client.Get("ticker")
+func GetTicker() (string, error) {
+	res, err := client.Get("ticker")
+	return res, err
 }
 
 // FIXME query string seems ineffectual (#1)
@@ -37,21 +37,27 @@ func GetTickerForCurrency(currency string) string {
 */
 
 func ToBTC(amount float64, currency string) (float64, error) {
-	amountStr := strconv.FormatFloat(amount, 'f', -1, 64)
+	amountStr := util.Float64ToString(amount)
 	eo := exchangeOpts{Opts: api.Opts{}, Currency: currency, Value: amountStr}
 	opts := client.EncodeOpts(eo)
 	fmt.Printf("OPTS: %s\n\n\nEND", opts)
-	res := client.GetWithOpts("tobtc", opts)
+	res, err := client.GetWithOpts("tobtc", opts)
+	if err != nil {
+		return 0, err
+	}
 	parsedRes, err := util.StringToFloat64(res)
 	fmt.Println(parsedRes)
 	return parsedRes, err
 }
 
 func FromBTC(amount int, currency string) (float64, error) {
-	amountStr := strconv.Itoa(amount)
+	amountStr := util.IntToString(amount)
 	eo := exchangeOpts{Opts: api.Opts{}, Currency: currency, Value: amountStr}
 	opts := client.EncodeOpts(eo)
-	res := client.GetWithOpts("frombtc", opts)
+	res, err := client.GetWithOpts("frombtc", opts)
+	if err != nil {
+		return 0, err
+	}
 	parsedRes, err := util.StringToFloat64(res)
 	fmt.Println(parsedRes)
 	return parsedRes, err

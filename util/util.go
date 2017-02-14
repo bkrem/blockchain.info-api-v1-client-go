@@ -12,3 +12,11 @@ func StringToFloat64(floatString string) (float64, error) {
 	parsedRes, err := strconv.ParseFloat(formattedRes, 64)
 	return parsedRes, err
 }
+
+func Float64ToString(floatVal float64) string {
+	return strconv.FormatFloat(floatVal, 'f', -1, 64)
+}
+
+func IntToString(intVal int) string {
+	return strconv.Itoa(intVal)
+}
