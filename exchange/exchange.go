@@ -12,7 +12,7 @@ type queryOpts struct {
 	Currency string `url:"currency"`
 	Value    string `url:"value"`
 	Time     int    `url:"time,omitempty"`
-	APICode  string `url:"apiCode,omitempty"`
+	APICode  string `url:"api_code,omitempty"`
 }
 
 var endpoints = map[string]string{
@@ -24,9 +24,7 @@ var endpoints = map[string]string{
 var client = api.API{BaseURL: "https://blockchain.info", Endpoints: endpoints}
 
 func GetTicker() string {
-	res := client.Get("ticker")
-	fmt.Println(res)
-	return res
+	return client.Get("ticker")
 }
 
 // FIXME query string seems ineffectual?
