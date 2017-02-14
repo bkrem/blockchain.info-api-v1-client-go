@@ -40,7 +40,6 @@ func ToBTC(amount float64, currency string) (float64, error) {
 	amountStr := util.Float64ToString(amount)
 	eo := exchangeOpts{Opts: api.Opts{}, Currency: currency, Value: amountStr}
 	opts := client.EncodeOpts(eo)
-	fmt.Printf("OPTS: %s\n\n\nEND", opts)
 	res, err := client.GetWithOpts("tobtc", opts)
 	if err != nil {
 		return 0, err
