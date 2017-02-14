@@ -16,9 +16,9 @@ type queryOpts struct {
 }
 
 var endpoints = map[string]string{
-	"ticker":  "/ticker?",
-	"frombtc": "/frombtc?",
-	"tobtc":   "/tobtc?",
+	"ticker":  "/ticker",
+	"frombtc": "/frombtc",
+	"tobtc":   "/tobtc",
 }
 
 var client = api.API{BaseURL: "https://blockchain.info", Endpoints: endpoints}

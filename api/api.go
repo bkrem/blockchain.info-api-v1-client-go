@@ -21,7 +21,7 @@ func (api API) Get(endpoint string) string {
 }
 
 func (api API) GetWithOpts(endpoint string, opts string) string {
-	url := api.BaseURL + api.Endpoints[endpoint] + opts
+	url := api.BaseURL + api.Endpoints[endpoint] + "?" + opts
 	fmt.Printf("GetWithOpts %s\n", url)
 	res, err := requests.Get(url)
 	if err != nil {
