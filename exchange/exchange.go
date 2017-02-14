@@ -11,8 +11,8 @@ import (
 type queryOpts struct {
 	Currency string `url:"currency"`
 	Value    string `url:"value"`
-	Time     int    `url:"time"`
-	APICode  string `url:"apiCode"`
+	Time     int    `url:"time,omitempty"`
+	APICode  string `url:"apiCode,omitempty"`
 }
 
 var endpoints = map[string]string{
