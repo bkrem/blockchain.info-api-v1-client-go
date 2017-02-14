@@ -2,8 +2,17 @@ package api
 
 import (
 	"fmt"
+	"github.com/google/go-querystring/query"
 	"github.com/jochasinga/requests"
 )
+
+type Opts struct {
+	APICode string `url:"api_code,omitempty"`
+}
+
+type OptsEncoder interface {
+	EncodeOpts() string
+}
 
 type API struct {
 	BaseURL   string
@@ -28,4 +37,10 @@ func (api API) GetWithOpts(endpoint string, opts string) string {
 		panic(err)
 	}
 	return res.String()
+}
+
+func (API) EncodeOpts(opts interface{}) string {
+	v, _ := query.Values(opts)
+	encodedOpts := v.Encode()
+	return encodedOpts
 }

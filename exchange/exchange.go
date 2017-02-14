@@ -3,16 +3,15 @@ package exchange
 import (
 	"fmt"
 	"github.com/bkrem/blockchain.info-api-v1-client-go/api"
-	"github.com/google/go-querystring/query"
-	"regexp"
+	"github.com/bkrem/blockchain.info-api-v1-client-go/util"
 	"strconv"
 )
 
-type queryOpts struct {
+type exchangeOpts struct {
+	api.Opts
 	Currency string `url:"currency"`
 	Value    string `url:"value"`
 	Time     int    `url:"time,omitempty"`
-	APICode  string `url:"api_code,omitempty"`
 }
 
 var endpoints = map[string]string{
@@ -27,10 +26,10 @@ func GetTicker() string {
 	return client.Get("ticker")
 }
 
-// FIXME query string seems ineffectual?
+// FIXME query string seems ineffectual (#1)
 /*
 func GetTickerForCurrency(currency string) string {
-	opts := encodeOpts(queryOpts{Currency: currency})
+	opts := encodeOpts(exchangeOpts{Currency: currency})
 	res := client.GetWithOpts("ticker", opts)
 	fmt.Println(res)
 	return res
@@ -38,33 +37,22 @@ func GetTickerForCurrency(currency string) string {
 */
 
 func ToBTC(amount float64, currency string) (float64, error) {
-	amountString := strconv.FormatFloat(amount, 'f', -1, 64)
-	opts := encodeOpts(queryOpts{Currency: currency, Value: amountString})
+	amountStr := strconv.FormatFloat(amount, 'f', -1, 64)
+	eo := exchangeOpts{Opts: api.Opts{}, Currency: currency, Value: amountStr}
+	opts := client.EncodeOpts(eo)
+	fmt.Printf("OPTS: %s\n\n\nEND", opts)
 	res := client.GetWithOpts("tobtc", opts)
-	parsedRes, err := stringToFloat64(res)
+	parsedRes, err := util.StringToFloat64(res)
 	fmt.Println(parsedRes)
 	return parsedRes, err
 }
 
 func FromBTC(amount int, currency string) (float64, error) {
-	amountString := strconv.Itoa(amount)
-	opts := encodeOpts(queryOpts{Currency: currency, Value: amountString})
+	amountStr := strconv.Itoa(amount)
+	eo := exchangeOpts{Opts: api.Opts{}, Currency: currency, Value: amountStr}
+	opts := client.EncodeOpts(eo)
 	res := client.GetWithOpts("frombtc", opts)
-	parsedRes, err := stringToFloat64(res)
+	parsedRes, err := util.StringToFloat64(res)
 	fmt.Println(parsedRes)
-	return parsedRes, err
-}
-
-func encodeOpts(opts queryOpts) string {
-	v, _ := query.Values(opts)
-	encodedOpts := v.Encode()
-	return encodedOpts
-}
-
-func stringToFloat64(floatString string) (float64, error) {
-	// Remove comma separators in response to parse as float
-	formattedRes := regexp.MustCompile(",").ReplaceAllString(floatString, "")
-	// Cast the formatted string to float64
-	parsedRes, err := strconv.ParseFloat(formattedRes, 64)
 	return parsedRes, err
 }
