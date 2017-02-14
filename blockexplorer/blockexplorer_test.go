@@ -1,0 +1,37 @@
+package blockexplorer
+
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
+const (
+	sampleBlockHash   = "00000000000000000102abc71e79bacac2e9f6f22e6c42729c297f5e8b0cb1bf"
+	sampleBlockIndex  = 1454914
+	sampleBlockHeight = 123
+)
+
+func TestGetBlock(t *testing.T) {
+	assert := assert.New(t)
+	blockByHash, err := GetBlockByHash(sampleBlockHash)
+	blockByIndex, err2 := GetBlockByIndex(sampleBlockIndex)
+
+	assert.Nil(err)
+	assert.Nil(err2)
+	assert.NotEmpty(blockByHash)
+	assert.NotEmpty(blockByIndex)
+	assert.Equal(blockByHash, blockByIndex) // TODO assert individually against .json file
+}
+
+func TestGetBlockHeight(t *testing.T) {
+	assert := assert.New(t)
+	blockHeight, err := GetBlockHeight(sampleBlockHeight)
+	assert.Nil(err)
+	assert.NotEmpty(blockHeight)
+}
+
+func TestGetLatestBlock(t *testing.T) {
+	res, err := GetLatestBlock()
+	assert.Nil(t, err)
+	assert.NotEmpty(t, res)
+}
