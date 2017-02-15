@@ -2,6 +2,7 @@ package exchange
 
 import (
 	"fmt"
+
 	"github.com/bkrem/blockchain.info-api-v1-client-go/api"
 	"github.com/bkrem/blockchain.info-api-v1-client-go/util"
 )
