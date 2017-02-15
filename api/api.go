@@ -10,10 +10,6 @@ type Opts struct {
 	APICode string `url:"api_code,omitempty"`
 }
 
-type OptsEncoder interface {
-	EncodeOpts() string
-}
-
 type API struct {
 	BaseURL   string
 	Endpoints map[string]string
