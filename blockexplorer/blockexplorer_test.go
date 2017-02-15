@@ -1,8 +1,9 @@
 package blockexplorer
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -11,6 +12,10 @@ const (
 	sampleBlockHeight = 123
 	sampleAddress     = "1159LMHxYyvAfUUKXMP6ofTFQKhroS3enP"
 	sampleHash160     = "00c89ed2a1c1991341a450eea89234929d803e47"
+)
+
+var (
+	sampleMultiAddress = []string{"1159LMHxYyvAfUUKXMP6ofTFQKhroS3enP", "18BMm994cy3ovRnXyEYKzkLXeNgJrjhW6y"}
 )
 
 func TestGetBlock(t *testing.T) {
@@ -47,4 +52,10 @@ func TestGetAddress(t *testing.T) {
 	assert.NotEmpty(res)
 	assert.NotEmpty(res2)
 	assert.Equal(res, res2) // TODO assert individually against .json file
+}
+
+func TestGetMultiAddress(t *testing.T) {
+	res, err := GetMultiAddress(sampleMultiAddress)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, res)
 }

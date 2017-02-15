@@ -1,6 +1,8 @@
 package blockexplorer
 
 import (
+	"strings"
+
 	"github.com/bkrem/blockchain.info-api-v1-client-go/api"
 	"github.com/bkrem/blockchain.info-api-v1-client-go/util"
 )
@@ -23,6 +25,7 @@ module.exports = {
 type blockExplorerOpts struct {
 	api.Opts
 	Limit  int    `url:"limit,omitempty"`
+	Active string `url:"active,omitempty"`
 	Offset int    `url:"offset,omitempty"`
 	Format string `url:"format,omitempty"`
 }
@@ -63,19 +66,43 @@ func GetBlockByIndex(index int) (string, error) {
 // GetBlockHeight fetches the block corresponding to the passed block height
 // Query pattern: `/block-height/:height?format=json(&api_code=:apiCode)`
 func GetBlockHeight(height int) (string, error) {
-	beOpts := blockExplorerOpts{Opts: api.Opts{}, Format: "json"}
+	beOpts := blockExplorerOpts{
+		Opts:   api.Opts{},
+		Format: "json",
+	}
 	opts := util.IntToString(height) + "?" + client.EncodeOpts(beOpts)
 	res, err := client.GetWithOpts("blockHeight", opts)
 	return res, err
 }
 
 // GetAddress fetches the passed bitcoin address's/hash160's transactions
-// Passing `0` for `limit` or `offset` will omit these options
+// NOTE: Passing `0` for `limit` or `offset` will omit these options
 // Query pattern: `/address/:address?format=json(&limit=:limit)(&offset=:offset)(&api_code=:apiCode)`
 func GetAddress(address string, limit int, offset int) (string, error) {
-	beOpts := blockExplorerOpts{Opts: api.Opts{}, Limit: limit, Offset: offset, Format: "json"}
+	beOpts := blockExplorerOpts{
+		Opts:   api.Opts{},
+		Limit:  limit,
+		Offset: offset,
+		Format: "json",
+	}
 	opts := address + "?" + client.EncodeOpts(beOpts)
 	res, err := client.GetWithOpts("address", opts)
+	return res, err
+}
+
+// GetMultiAddress fetches summaries of the passed addresses and their transactions
+// NOTE: Passing `0` for `limit` or `offset` will omit these options
+// Query pattern: `/multiaddr?active=:active(&n=:limit)(&offset=:offset)(&api_code=:apiCode)`
+func GetMultiAddress(addresses []string, limit int, offset int) (string, error) {
+	concatAddresses := strings.Join(addresses, "|")
+	beOpts := blockExplorerOpts{
+		Opts:   api.Opts{},
+		Active: concatAddresses,
+		Limit:  limit,
+		Offset: offset,
+	}
+	opts := client.EncodeOpts(beOpts)
+	res, err := client.GetWithOpts("multiAddr", opts)
 	return res, err
 }
 
