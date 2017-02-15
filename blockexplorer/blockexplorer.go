@@ -22,6 +22,8 @@ module.exports = {
 
 type blockExplorerOpts struct {
 	api.Opts
+	Limit  int    `url:"limit,omitempty"`
+	Offset int    `url:"offset,omitempty"`
 	Format string `url:"format,omitempty"`
 }
 
@@ -40,6 +42,8 @@ var endpoints = map[string]string{
 
 var client = api.API{BaseURL: "https://blockchain.info", Endpoints: endpoints}
 
+// GetBlockByHash fetches the block corresponding to the passed hash string
+// Query pattern: `/rawblock/:hash(?api_code=:apiCode)`
 func GetBlockByHash(hash string) (string, error) {
 	beOpts := blockExplorerOpts{Opts: api.Opts{}}
 	opts := hash + "?" + client.EncodeOpts(beOpts)
@@ -47,6 +51,8 @@ func GetBlockByHash(hash string) (string, error) {
 	return res, err
 }
 
+// GetBlockByIndex fetches the block corresponding to the passed index
+// Query pattern: `/rawblock/:index(?api_code=:apiCode)`
 func GetBlockByIndex(index int) (string, error) {
 	beOpts := blockExplorerOpts{Opts: api.Opts{}}
 	opts := util.IntToString(index) + "?" + client.EncodeOpts(beOpts)
@@ -54,6 +60,8 @@ func GetBlockByIndex(index int) (string, error) {
 	return res, err
 }
 
+// GetBlockHeight fetches the block corresponding to the passed block height
+// Query pattern: `/block-height/:height?format=json(&api_code=:apiCode)`
 func GetBlockHeight(height int) (string, error) {
 	beOpts := blockExplorerOpts{Opts: api.Opts{}, Format: "json"}
 	opts := util.IntToString(height) + "?" + client.EncodeOpts(beOpts)
@@ -61,6 +69,18 @@ func GetBlockHeight(height int) (string, error) {
 	return res, err
 }
 
+// GetAddress fetches the passed bitcoin address's/hash160's transactions
+// Passing `0` for `limit` or `offset` will omit these options
+// Query pattern: `/address/:address?format=json(&limit=:limit)(&offset=:offset)(&api_code=:apiCode)`
+func GetAddress(address string, limit int, offset int) (string, error) {
+	beOpts := blockExplorerOpts{Opts: api.Opts{}, Limit: limit, Offset: offset, Format: "json"}
+	opts := address + "?" + client.EncodeOpts(beOpts)
+	res, err := client.GetWithOpts("address", opts)
+	return res, err
+}
+
+// GetLatestBlock fetches the latest block on the main chain
+// Query pattern: `/latestblock(?api_code=:apiCode)`
 func GetLatestBlock() (string, error) {
 	res, err := client.Get("latestBlock")
 	return res, err
