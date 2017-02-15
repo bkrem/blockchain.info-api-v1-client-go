@@ -94,10 +94,10 @@ func GetAddress(address string, limit int, offset int) (string, error) {
 // NOTE: Passing `0` for `limit` or `offset` will omit these options
 // Query pattern: `/multiaddr?active=:active(&n=:limit)(&offset=:offset)(&api_code=:apiCode)`
 func GetMultiAddress(addresses []string, limit int, offset int) (string, error) {
-	concatAddresses := strings.Join(addresses, "|")
+	joinedAddresses := strings.Join(addresses, "|")
 	beOpts := blockExplorerOpts{
 		Opts:   api.Opts{},
-		Active: concatAddresses,
+		Active: joinedAddresses,
 		Limit:  limit,
 		Offset: offset,
 	}
@@ -106,9 +106,34 @@ func GetMultiAddress(addresses []string, limit int, offset int) (string, error) 
 	return res, err
 }
 
+// GetUnspentOutputs fetches an array of unspent outputs for the passed addresses
+// Query pattern: `/unspent?active=:active(&api_code=:apiCode)`
+func GetUnspentOutputs(addresses []string) (string, error) {
+	joinedAddresses := strings.Join(addresses, "|")
+	beOpts := blockExplorerOpts{
+		Opts:   api.Opts{},
+		Active: joinedAddresses,
+	}
+	opts := client.EncodeOpts(beOpts)
+	res, err := client.GetWithOpts("unspent", opts)
+	return res, err
+}
+
 // GetLatestBlock fetches the latest block on the main chain
 // Query pattern: `/latestblock(?api_code=:apiCode)`
 func GetLatestBlock() (string, error) {
 	res, err := client.Get("latestBlock")
+	return res, err
+}
+
+// GetUnconfirmedTxs fetches an array of all unconfirmed transactions
+// Query pattern: `/unconfirmed-transactions?format=json(&api_code=:apiCode)`
+func GetUnconfirmedTxs() (string, error) {
+	beOpts := blockExplorerOpts{
+		Opts:   api.Opts{},
+		Format: "json",
+	}
+	opts := client.EncodeOpts(beOpts)
+	res, err := client.GetWithOpts("unconfTxs", opts)
 	return res, err
 }

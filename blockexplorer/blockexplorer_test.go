@@ -37,12 +37,6 @@ func TestGetBlockHeight(t *testing.T) {
 	assert.NotEmpty(blockHeight)
 }
 
-func TestGetLatestBlock(t *testing.T) {
-	res, err := GetLatestBlock()
-	assert.Nil(t, err)
-	assert.NotEmpty(t, res)
-}
-
 func TestGetAddress(t *testing.T) {
 	assert := assert.New(t)
 	res, err := GetAddress(sampleAddress, 0, 0)
@@ -55,7 +49,25 @@ func TestGetAddress(t *testing.T) {
 }
 
 func TestGetMultiAddress(t *testing.T) {
-	res, err := GetMultiAddress(sampleMultiAddress)
+	res, err := GetMultiAddress(sampleMultiAddress, 0, 0)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, res)
+}
+
+func TestGetUnspentOutputs(t *testing.T) {
+	res, err := GetUnspentOutputs(sampleMultiAddress)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, res)
+}
+
+func TestGetLatestBlock(t *testing.T) {
+	res, err := GetLatestBlock()
+	assert.Nil(t, err)
+	assert.NotEmpty(t, res)
+}
+
+func TestGetUnconfirmedTxs(t *testing.T) {
+	res, err := GetUnconfirmedTxs()
 	assert.Nil(t, err)
 	assert.NotEmpty(t, res)
 }
