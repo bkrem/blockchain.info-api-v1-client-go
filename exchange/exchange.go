@@ -23,7 +23,7 @@ var endpoints = map[string]string{
 var client = api.API{BaseURL: "https://blockchain.info", Endpoints: endpoints}
 
 func GetTicker() (string, error) {
-	res, err := client.Get("ticker")
+	res, err := client.Get("ticker", "")
 	return res, err
 }
 
@@ -31,7 +31,7 @@ func GetTicker() (string, error) {
 /*
 func GetTickerForCurrency(currency string) string {
 	opts := encodeOpts(exchangeOpts{Currency: currency})
-	res := client.GetWithOpts("ticker", opts)
+	res := client.Get("ticker", opts)
 	fmt.Println(res)
 	return res
 }
@@ -41,7 +41,7 @@ func ToBTC(amount float64, currency string) (float64, error) {
 	amountStr := util.Float64ToString(amount)
 	eo := exchangeOpts{Opts: api.Opts{}, Currency: currency, Value: amountStr}
 	opts := client.EncodeOpts(eo)
-	res, err := client.GetWithOpts("tobtc", opts)
+	res, err := client.Get("tobtc", opts)
 	if err != nil {
 		return 0, err
 	}
@@ -54,7 +54,7 @@ func FromBTC(amount int, currency string) (float64, error) {
 	amountStr := util.IntToString(amount)
 	eo := exchangeOpts{Opts: api.Opts{}, Currency: currency, Value: amountStr}
 	opts := client.EncodeOpts(eo)
-	res, err := client.GetWithOpts("frombtc", opts)
+	res, err := client.Get("frombtc", opts)
 	if err != nil {
 		return 0, err
 	}

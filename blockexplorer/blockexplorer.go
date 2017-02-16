@@ -50,7 +50,7 @@ var client = api.API{BaseURL: "https://blockchain.info", Endpoints: endpoints}
 func GetBlockByHash(hash string) (string, error) {
 	beOpts := blockExplorerOpts{Opts: api.Opts{}}
 	opts := hash + "?" + client.EncodeOpts(beOpts)
-	res, err := client.GetWithOpts("rawBlock", opts)
+	res, err := client.Get("rawBlock", opts)
 	return res, err
 }
 
@@ -59,7 +59,7 @@ func GetBlockByHash(hash string) (string, error) {
 func GetBlockByIndex(index int) (string, error) {
 	beOpts := blockExplorerOpts{Opts: api.Opts{}}
 	opts := util.IntToString(index) + "?" + client.EncodeOpts(beOpts)
-	res, err := client.GetWithOpts("rawBlock", opts)
+	res, err := client.Get("rawBlock", opts)
 	return res, err
 }
 
@@ -71,7 +71,7 @@ func GetBlockHeight(height int) (string, error) {
 		Format: "json",
 	}
 	opts := util.IntToString(height) + "?" + client.EncodeOpts(beOpts)
-	res, err := client.GetWithOpts("blockHeight", opts)
+	res, err := client.Get("blockHeight", opts)
 	return res, err
 }
 
@@ -86,7 +86,7 @@ func GetAddress(address string, limit int, offset int) (string, error) {
 		Format: "json",
 	}
 	opts := address + "?" + client.EncodeOpts(beOpts)
-	res, err := client.GetWithOpts("address", opts)
+	res, err := client.Get("address", opts)
 	return res, err
 }
 
@@ -102,7 +102,7 @@ func GetMultiAddress(addresses []string, limit int, offset int) (string, error) 
 		Offset: offset,
 	}
 	opts := client.EncodeOpts(beOpts)
-	res, err := client.GetWithOpts("multiAddr", opts)
+	res, err := client.Get("multiAddr", opts)
 	return res, err
 }
 
@@ -115,14 +115,14 @@ func GetUnspentOutputs(addresses []string) (string, error) {
 		Active: joinedAddresses,
 	}
 	opts := client.EncodeOpts(beOpts)
-	res, err := client.GetWithOpts("unspent", opts)
+	res, err := client.Get("unspent", opts)
 	return res, err
 }
 
 // GetLatestBlock fetches the latest block on the main chain
 // Query pattern: `/latestblock(?api_code=:apiCode)`
 func GetLatestBlock() (string, error) {
-	res, err := client.Get("latestBlock")
+	res, err := client.Get("latestBlock", "")
 	return res, err
 }
 
@@ -134,6 +134,6 @@ func GetUnconfirmedTxs() (string, error) {
 		Format: "json",
 	}
 	opts := client.EncodeOpts(beOpts)
-	res, err := client.GetWithOpts("unconfTxs", opts)
+	res, err := client.Get("unconfTxs", opts)
 	return res, err
 }
