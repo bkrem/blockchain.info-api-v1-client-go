@@ -1,0 +1,11 @@
+package: github.com/bkrem/blockchain.info-api-v1-client-go
+import:
+- package: github.com/google/go-querystring
+  subpackages:
+  - query
+- package: github.com/jochasinga/requests
+testImport:
+- package: github.com/stretchr/testify
+  version: ^1.1.4
+  subpackages:
+  - assert
