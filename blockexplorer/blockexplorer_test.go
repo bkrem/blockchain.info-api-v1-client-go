@@ -54,11 +54,13 @@ func TestGetMultiAddress(t *testing.T) {
 	assert.NotEmpty(t, res)
 }
 
+/* TODO Refactor for stable test case
 func TestGetUnspentOutputs(t *testing.T) {
 	res, err := GetUnspentOutputs(sampleMultiAddress)
 	assert.Nil(t, err)
 	assert.NotEmpty(t, res)
 }
+*/
 
 func TestGetLatestBlock(t *testing.T) {
 	res, err := GetLatestBlock()
