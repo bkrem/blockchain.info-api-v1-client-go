@@ -73,3 +73,9 @@ func TestGetUnconfirmedTxs(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotEmpty(t, res)
 }
+
+func TestGetBlocksByTimestamp(t *testing.T) {
+	res, err := GetBlocksByTimestamp(1487430478000)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, res)
+}

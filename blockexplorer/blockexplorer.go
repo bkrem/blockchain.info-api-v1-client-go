@@ -137,3 +137,16 @@ func GetUnconfirmedTxs() (string, error) {
 	res, err := client.Get("unconfTxs", opts)
 	return res, err
 }
+
+// GetBlocksByTimestamp fetches an array of blocks for the time between the
+// passed Epoch time millisecond timestamp and the beginning of the day
+// Query pattern: `/blocks/:time?format=json(&api_code=:apiCode)`
+func GetBlocksByTimestamp(timestamp int) (string, error) {
+	beOpts := blockExplorerOpts{
+		Opts:   api.Opts{},
+		Format: "json",
+	}
+	opts := util.IntToString(timestamp) + "?" + client.EncodeOpts(beOpts)
+	res, err := client.Get("blocks", opts)
+	return res, err
+}
