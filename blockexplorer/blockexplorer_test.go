@@ -12,6 +12,8 @@ const (
 	sampleBlockHeight = 123
 	sampleAddress     = "1159LMHxYyvAfUUKXMP6ofTFQKhroS3enP"
 	sampleHash160     = "00c89ed2a1c1991341a450eea89234929d803e47"
+	sampleTimestamp   = 1487430478000
+	samplePoolName    = "F2Pool"
 )
 
 var (
@@ -54,13 +56,12 @@ func TestGetMultiAddress(t *testing.T) {
 	assert.NotEmpty(t, res)
 }
 
-/* TODO Refactor for stable test case
 func TestGetUnspentOutputs(t *testing.T) {
+	t.Skip("Skipping non-deterministic TestGetUnspentOutputs() until fixed")
 	res, err := GetUnspentOutputs(sampleMultiAddress)
 	assert.Nil(t, err)
 	assert.NotEmpty(t, res)
 }
-*/
 
 func TestGetLatestBlock(t *testing.T) {
 	res, err := GetLatestBlock()
@@ -75,7 +76,13 @@ func TestGetUnconfirmedTxs(t *testing.T) {
 }
 
 func TestGetBlocksByTimestamp(t *testing.T) {
-	res, err := GetBlocksByTimestamp(1487430478000)
+	res, err := GetBlocksByTimestamp(sampleTimestamp)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, res)
+}
+
+func TestGetBlocksByPool(t *testing.T) {
+	res, err := GetBlocksByPool(samplePoolName)
 	assert.Nil(t, err)
 	assert.NotEmpty(t, res)
 }

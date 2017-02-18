@@ -150,3 +150,13 @@ func GetBlocksByTimestamp(timestamp int) (string, error) {
 	res, err := client.Get("blocks", opts)
 	return res, err
 }
+
+func GetBlocksByPool(poolName string) (string, error) {
+	beOpts := blockExplorerOpts{
+		Opts:   api.Opts{},
+		Format: "json",
+	}
+	opts := poolName + "?" + client.EncodeOpts(beOpts)
+	res, err := client.Get("blocks", opts)
+	return res, err
+}
