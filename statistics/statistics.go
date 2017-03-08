@@ -32,3 +32,14 @@ func GetChartData(chartType string, timespan string, format string) (string, err
 	res, err := client.Get("charts", opts)
 	return res, err
 }
+
+func GetPoolData(timespan string) (string, error) {
+	statsOpts := statisticsOpts{
+		Opts:     api.Opts{},
+		Timespan: timespan,
+		Format:   "json",
+	}
+	opts := client.EncodeOpts(statsOpts)
+	res, err := client.Get("pools", opts)
+	return res, err
+}
