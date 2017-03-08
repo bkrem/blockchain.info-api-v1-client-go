@@ -25,8 +25,7 @@ var endpoints = map[string]string{
 	"latestBlock": "/latestblock?",
 	"unconfTxs":   "/unconfirmed-transactions?",
 	"blocks":      "/blocks/",
-	"inv":         "/inv/",
-}
+	o}
 
 var client = api.API{BaseURL: "https://blockchain.info", Endpoints: endpoints}
 
