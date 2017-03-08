@@ -1,8 +1,9 @@
 package exchange
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 const floatType float64 = 0.1

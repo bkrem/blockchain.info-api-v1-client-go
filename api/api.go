@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/google/go-querystring/query"
 	"github.com/jochasinga/requests"
@@ -18,7 +19,7 @@ type API struct {
 
 func (api API) Get(endpoint string, opts string) (string, error) {
 	url := api.BaseURL + api.Endpoints[endpoint] + opts
-	// fmt.Printf("Get %s\n", url)
+	fmt.Printf("Get %s\n", url)
 	res, err := requests.Get(url)
 	if res.Response.StatusCode != 200 {
 		return "", errors.New(res.String())

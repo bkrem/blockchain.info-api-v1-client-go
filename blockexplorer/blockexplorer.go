@@ -151,6 +151,9 @@ func GetBlocksByTimestamp(timestamp int) (string, error) {
 	return res, err
 }
 
+// GetBlocksByPool fetches an array of blocks mined by the pool
+// corresponding to `poolName`
+// Query pattern: `/blocks/:poolName?format=json(&api_code=:apiCode)`
 func GetBlocksByPool(poolName string) (string, error) {
 	beOpts := blockExplorerOpts{
 		Opts:   api.Opts{},
