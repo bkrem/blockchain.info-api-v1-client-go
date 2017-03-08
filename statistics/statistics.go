@@ -22,11 +22,11 @@ var endpoints = map[string]string{
 
 var client = api.API{BaseURL: "https://blockchain.info", Endpoints: endpoints}
 
-func GetChartData(chartType string, timespan string) (string, error) {
+func GetChartData(chartType string, timespan string, format string) (string, error) {
 	statsOpts := statisticsOpts{
 		Opts:     api.Opts{},
 		Timespan: timespan,
-		Format:   "json",
+		Format:   format,
 	}
 	opts := chartType + "?" + client.EncodeOpts(statsOpts)
 	res, err := client.Get("charts", opts)

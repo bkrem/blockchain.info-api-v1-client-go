@@ -12,7 +12,13 @@ const (
 )
 
 func TestGetChartData(t *testing.T) {
-	data, err := GetChartData(chartType, timespan)
-	assert.Nil(t, err)
-	assert.NotEmpty(t, data)
+	assert := assert.New(t)
+	// JSON response
+	jsonData, err := GetChartData(chartType, timespan, "json")
+	assert.Nil(err)
+	assert.NotEmpty(jsonData)
+	// CSV response
+	csvData, err := GetChartData(chartType, timespan, "csv")
+	assert.Nil(err)
+	assert.NotEmpty(csvData)
 }
