@@ -8,5 +8,6 @@ before_install:
     - go get github.com/mattn/goveralls
 
 script:
+    - go test -v `go list ./...|grep -v vendor/*`
     - goveralls -repotoken $COVERALLS_TOKEN -package ./... 
 
