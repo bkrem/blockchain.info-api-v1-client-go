@@ -18,6 +18,7 @@ func TestGetChartData(t *testing.T) {
 	jsonData, err := GetChartData(chartType, weekTimespan, "json")
 	assert.Nil(err)
 	assert.NotEmpty(jsonData)
+
 	// CSV response
 	csvData, err := GetChartData(chartType, weekTimespan, "csv")
 	assert.Nil(err)
@@ -26,7 +27,6 @@ func TestGetChartData(t *testing.T) {
 
 func TestGetPoolData(t *testing.T) {
 	assert := assert.New(t)
-
 	// no timespan
 	poolData, err := GetPoolData("")
 	assert.Nil(err)
@@ -41,4 +41,11 @@ func TestGetPoolData(t *testing.T) {
 	poolData, err = GetPoolData(weekTimespan)
 	assert.NotNil(err)
 	assert.Empty(poolData)
+}
+
+func TestGetStats(t *testing.T) {
+	assert := assert.New(t)
+	stats, err := GetStats()
+	assert.Nil(err)
+	assert.NotEmpty(stats)
 }

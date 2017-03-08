@@ -10,6 +10,7 @@ stats: new UrlPattern('/stats?format=json(&api_code=:apiCode)')
 
 type statisticsOpts struct {
 	api.Opts
+	StatName string `url:"stat"`
 	Timespan string `url:"timespan,omitempty"`
 	Format   string `url:"format"`
 }
@@ -41,5 +42,15 @@ func GetPoolData(timespan string) (string, error) {
 	}
 	opts := client.EncodeOpts(statsOpts)
 	res, err := client.Get("pools", opts)
+	return res, err
+}
+
+func GetStats() (string, error) {
+	statsOpts := statisticsOpts{
+		Opts:   api.Opts{},
+		Format: "json",
+	}
+	opts := client.EncodeOpts(statsOpts)
+	res, err := client.Get("stats", opts)
 	return res, err
 }
