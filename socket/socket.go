@@ -12,7 +12,10 @@ import (
 
 var ops = map[string]string{
 	"ping":           "ping",
+	"pingBlock":      "ping_block",
+	"pingTx":         "ping_tx",
 	"unconfirmedTxs": "unconfirmed_sub",
+	"newBlocks":      "blocks_sub",
 }
 
 const wsURL = "wss://ws.blockchain.info/inv"
@@ -66,6 +69,7 @@ func monitor(conn *websocket.Conn) {
 
 func send(conn *websocket.Conn, op string) {
 	msg := "{\"op\": \"" + op + "\"}"
+	log.Printf("Sending msg: %v", msg)
 	err := conn.WriteMessage(websocket.TextMessage, []byte(msg))
 	if err != nil {
 		log.Println("send error:", err)
@@ -98,6 +102,10 @@ func SubUnconfirmedTxs(conn *websocket.Conn) {
 	send(conn, ops["unconfirmedTxs"])
 }
 
+func SubNewBlocks(conn *websocket.Conn) {
+	send(conn, ops["newBlocks"])
+}
+
 func SubAddress(conn *websocket.Conn) {
 
 }
@@ -112,6 +120,7 @@ func Connect() {
 	// sendWithArgs(conn, ops["ping"], map[string]string{"addr": "19LjQtrSw6fKSCmUJR3enuZ8gq3ufCYRNt", "d": "dd"})
 
 	go keepAlive(conn)
+	SubNewBlocks(conn)
 	go read(conn)
 	monitor(conn)
 }
