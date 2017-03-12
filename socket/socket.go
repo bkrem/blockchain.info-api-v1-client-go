@@ -1,7 +1,7 @@
 package socket
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"os"
 	"os/signal"
@@ -16,6 +16,7 @@ var ops = map[string]string{
 	"pingTx":         "ping_tx",
 	"unconfirmedTxs": "unconfirmed_sub",
 	"newBlocks":      "blocks_sub",
+	"txsOnAddr":      "addr_sub",
 }
 
 const wsURL = "wss://ws.blockchain.info/inv"
@@ -68,9 +69,14 @@ func monitor(conn *websocket.Conn) {
 }
 
 func send(conn *websocket.Conn, op string) {
-	msg := "{\"op\": \"" + op + "\"}"
+	jsonMsg, err := json.Marshal(map[string]string{"op": op})
+	if err != nil {
+		log.Println("send .Marshal error:", err)
+		return
+	}
+	msg := string(jsonMsg)
 	log.Printf("Sending msg: %v", msg)
-	err := conn.WriteMessage(websocket.TextMessage, []byte(msg))
+	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
 	if err != nil {
 		log.Println("send error:", err)
 		return
@@ -78,17 +84,26 @@ func send(conn *websocket.Conn, op string) {
 }
 
 func sendWithArgs(conn *websocket.Conn, op string, args map[string]string) {
-	var argStr string
-	for key, val := range args {
-		argStr += "\"" + key + "\": " + "\"" + val + "\","
+	args["op"] = op
+	jsonArgs, err := json.Marshal(args)
+	if err != nil {
+		log.Println("sendWithArgs .Marshal error:", err)
+		return
 	}
-	fmt.Println(argStr)
+	msg := string(jsonArgs)
+	log.Printf("Sending msg (with args): %v", msg)
+	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+	if err != nil {
+		log.Println("sendWithArgs error:", err)
+		return
+	}
 }
 
 // ========================================================================
 
 func keepAlive(conn *websocket.Conn) {
-	ticker := time.NewTicker(time.Second * 30)
+	const keepAliveInterval = 30
+	ticker := time.NewTicker(time.Second * keepAliveInterval)
 	for {
 		select {
 		case <-ticker.C:
@@ -106,8 +121,9 @@ func SubNewBlocks(conn *websocket.Conn) {
 	send(conn, ops["newBlocks"])
 }
 
-func SubAddress(conn *websocket.Conn) {
-
+func SubAddress(conn *websocket.Conn, addr string) {
+	sendWithArgs(conn, ops["txsOnAddr"],
+		map[string]string{"addr": addr})
 }
 
 func Connect() {
@@ -117,10 +133,9 @@ func Connect() {
 	}
 	defer conn.Close()
 
-	// sendWithArgs(conn, ops["ping"], map[string]string{"addr": "19LjQtrSw6fKSCmUJR3enuZ8gq3ufCYRNt", "d": "dd"})
-
 	go keepAlive(conn)
 	SubNewBlocks(conn)
+	SubAddress(conn, "19LjQtrSw6fKSCmUJR3enuZ8gq3ufCYRNt")
 	go read(conn)
 	monitor(conn)
 }
