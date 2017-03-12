@@ -2,12 +2,6 @@ package statistics
 
 import "github.com/bkrem/blockchain.info-api-v1-client-go/api"
 
-/*
-charts: new UrlPattern('/charts/:type?format=json(&api_code=:apiCode)(&timespan=:timespan)'),
-pools: new UrlPattern('/pools?format=json(&timespan=:timespan\\days)(&api_code=:apiCode)'),
-stats: new UrlPattern('/stats?format=json(&api_code=:apiCode)')
-*/
-
 type statisticsOpts struct {
 	api.Opts
 	StatName string `url:"stat"`
