@@ -12,11 +12,11 @@ import (
 
 var ops = map[string]string{
 	"ping":           "ping",
-	"pingBlock":      "ping_block",
-	"pingTx":         "ping_tx",
 	"unconfirmedTxs": "unconfirmed_sub",
 	"newBlocks":      "blocks_sub",
 	"txsOnAddr":      "addr_sub",
+	"pingBlock":      "ping_block", // debug
+	"pingTx":         "ping_tx",    // debug
 }
 
 const wsURL = "wss://ws.blockchain.info/inv"
@@ -113,14 +113,19 @@ func keepAlive(conn *websocket.Conn) {
 	}
 }
 
+// SubUnconfirmedTxs opens a subscription for all new bitcoin transactions.
 func SubUnconfirmedTxs(conn *websocket.Conn) {
 	send(conn, ops["unconfirmedTxs"])
 }
 
+// SubNewBlocks opens a subscription for any new blocks that are minted
+// on the bitcoin blockchain.
 func SubNewBlocks(conn *websocket.Conn) {
 	send(conn, ops["newBlocks"])
 }
 
+// SubAddress opens a subscription for any new transactions for
+// the passed bitcoin address `addr`.
 func SubAddress(conn *websocket.Conn, addr string) {
 	sendWithArgs(conn, ops["txsOnAddr"],
 		map[string]string{"addr": addr})
@@ -135,7 +140,8 @@ func Connect() {
 
 	go keepAlive(conn)
 	SubNewBlocks(conn)
-	SubAddress(conn, "19LjQtrSw6fKSCmUJR3enuZ8gq3ufCYRNt")
+	// SubAddress(conn, "1DTh7XPb42PgCFnuMHSitMPWxCfNNFej8n")
+
 	go read(conn)
 	monitor(conn)
 }
