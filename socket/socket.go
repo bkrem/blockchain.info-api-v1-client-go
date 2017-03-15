@@ -131,6 +131,8 @@ func SubAddress(conn *websocket.Conn, addr string) {
 		map[string]string{"addr": addr})
 }
 
+// Connect initialises the secure websocket connection
+// to wss://ws.blockchain.info/inv .
 func Connect() {
 	conn, err := dial()
 	if err != nil {
