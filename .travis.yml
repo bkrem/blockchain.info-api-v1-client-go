@@ -10,5 +10,7 @@ before_install:
 
 script:
     - go test -v `go list ./...|grep -v vendor/*`
+
+after_script:
     - goveralls -repotoken $COVERALLS_TOKEN -package ./... 
 
